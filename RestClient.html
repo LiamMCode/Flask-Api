@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title> REST Client </title>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"</script>
+		<script type="text/javascript">
+			$(document).ready(function()
+				{
+					$('form').on('submit', function(event)
+					{
+						$.ajax({
+							data:
+							{
+								firstName: $('#fname').val(),
+								lastName: $('#lname').val(),
+							},
+							type : 'POST',
+							url : 'http://ysjcs.net:5016/sendData'
+						})
+						.done(function(data)
+						{
+							$('output').text(data.output).show();
+						});
+						event.preventDefault();
+					});
+				});
+				
+				function tokenSuccess(err, response)
+				{
+					if(err)
+					{
+						throw err;
+					}
+					$window.sessionStorage.accessToken = response.body.accessToken;
+				}
+				
+				function getAll()
+				{
+					$.ajax({
+						type : 'GET',
+						dataType: 'jsonp',
+						url : 'http://ysjcs.net:5016/getData2',
+						success: function(data)
+						{
+							$('#All').text(data.output).show();
+						}
+					});
+				}
+				
+				function getSpecData()
+				{
+					$.ajax({
+						type : 'GET',
+						dataType : 'jsonp',
+						url : 'http://ysjcs.net:5016/getData',
+						success: function(data)
+						{
+							$('Specific').text(data.output).show();
+						}
+					});
+				}
+				
+				function deleteData()
+				{
+					$.ajax({
+						url : ''http://ysjcs.net:5016/DeleteData',
+						type : 'DELETE',
+						success: function(result)
+						{
+							$('#delete').text(result).show();
+						}
+					});
+				}
+		</script>
+	</head>
+	<body>
+		<button onclick="getAll()" id="GetData2" type="button"> Get all data from database </button>
+		<button onclick="getSpecData()" id="GetData1"type="button"> Get specific data from database </button>
+		<button onclick="DeleteData()" id="deleteData"type="button"> Get Delete data from database </button>
+		<div>
+			<form>
+				<label for="fname">First name:</label><br>
+				<input type="text" id="fname" name="fname"></br>
+				<label for="lname">Last name:</label><br>
+				<input type="text" id="lname" name="lname"></br>
+			</form>
+		</div>
+		<div id="output"></div><br>
+		
+		<div id="All"></div><br>
+		<div>
+			<label for="SpecData">Enter the name you wish to search:</label><br>
+			<input type="text" id="SpecData" name="SpecData"><br>
+		</div>
+		
+		<div id="Specific"></div><br>
+		<div>
+			<label for="Delete">Enter the name of the record to delete:</label><br>
+			<input type="text" id="Delete" name="Delete"></br>
+		</div>
+		<br>
+		<div id="delete"></div>
+	</body>
+</html>
